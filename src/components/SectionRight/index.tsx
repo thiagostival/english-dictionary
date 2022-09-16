@@ -30,6 +30,7 @@ export function SectionRight() {
     history,
     wordList,
     favorites,
+    selectedWord,
     handleFavorite,
     handleRemoveHistory,
     handleSetSelectedWord,
@@ -57,7 +58,7 @@ export function SectionRight() {
   }, []);
 
   return (
-    <WrapperSectionRight>
+    <WrapperSectionRight isDisabled={!!selectedWord}>
       <TabList>
         {tabs.map((tab, idx) => (
           <Tab
@@ -76,7 +77,10 @@ export function SectionRight() {
         ) : (
           <GridTemplate>
             {dataList.map((word, idx) => (
-              <WrapperButton key={`${word}-${idx}`}>
+              <WrapperButton
+                key={`${word}-${idx}`}
+                isActive={word === selectedWord}
+              >
                 <Button
                   variant="unstyled"
                   onClick={() => handleSetSelectedWord(word)}
