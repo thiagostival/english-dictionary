@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
-export const GlobalStyles = createGlobalStyle`
- * {
+export const GlobalStyle = createGlobalStyle`
+  * {
     margin: 0;
     padding: 0;
     outline: 0;
@@ -17,8 +17,10 @@ export const GlobalStyles = createGlobalStyle`
     display: flex ;
     flex-direction:  column;
   }
-  
+
   body {
+    color: ${(props) => props.theme.colors.gray[700]};
+    background: ${(props) => props.theme.colors.white[200]};
     -webkit-font-smoothing: antialiased;
   }
 
