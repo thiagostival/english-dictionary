@@ -2,19 +2,27 @@ import styled, { css } from 'styled-components';
 
 import { btnVariants } from '../Button/styles';
 
-interface ITabProps {
+interface ICommonProps {
   isActive?: boolean;
 }
+interface IWrapperProps {
+  isDisabled?: boolean;
+}
 
-export const WrapperSectionRight = styled.div`
+export const WrapperSectionRight = styled.div<IWrapperProps>`
   display: flex;
   flex-direction: column;
 
   width: 100%;
   height: 100%;
 
+  pointer-events: ${(props) => (props.isDisabled ? 'none' : 'all')};
+
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     width: 70%;
+    margin-top: ${({ theme }) => theme.space[5]};
+
+    pointer-events: all;
   }
 `;
 
@@ -23,6 +31,7 @@ export const TabList = styled.div`
   justify-content: space-between;
 
   padding: ${({ theme }) => theme.space[5]};
+  user-select: none;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     justify-content: start;
@@ -30,7 +39,7 @@ export const TabList = styled.div`
   }
 `;
 
-export const Tab = styled.button<ITabProps>`
+export const Tab = styled.button<ICommonProps>`
   display: flex;
 
   height: 30px;
@@ -72,7 +81,7 @@ export const GridTemplate = styled.div`
   height: fit-content;
 `;
 
-export const WrapperButton = styled.div`
+export const WrapperButton = styled.div<ICommonProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,13 +89,20 @@ export const WrapperButton = styled.div`
 
   height: 80px;
   width: 110px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+
+  ${({ theme, isActive }) =>
+    isActive &&
+    css`
+      border: 2px solid ${theme.colors.blue[300]};
+    `}
 
   > button {
     ${btnVariants.solid}
 
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
     font-size: ${({ theme }) => theme.fontSizes.md};
+
+    border-radius: ${({ theme }) => theme.borderRadius.sm} 0;
   }
 `;
 
@@ -99,7 +115,8 @@ export const GroupIcons = styled.div`
 
   width: 100%;
   padding: ${({ theme }) => theme.space[1]};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+
+  border-radius: 0 ${({ theme }) => theme.borderRadius.sm};
 
   background: ${({ theme }) => theme.colors.blue[100]};
 

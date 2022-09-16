@@ -3,21 +3,27 @@ import { useTheme } from 'styled-components';
 import { QueryFunctionContext, useQuery } from 'react-query';
 
 import { IoIosClose, IoMdVolumeHigh } from 'react-icons/io';
-import { MdOutlineFavoriteBorder, MdContentCopy } from 'react-icons/md';
+import {
+  MdOutlineFavoriteBorder,
+  MdOutlineFavorite,
+  MdContentCopy,
+} from 'react-icons/md';
 
 // STYLES
 import {
   GroupButtons,
-  HeaderSectionLeft,
+  HeaderMobileSectionLeft,
   ContentSectionLeft,
   WrapperSectionLeft,
   Text,
   Group,
   Meanings,
+  Overlay,
 } from './styles';
 
 // COMPONENTS
 import { Button } from '../Button';
+import { Loading } from '../Loading';
 
 // SERVICES
 import { AxiosError } from 'axios';
@@ -29,11 +35,11 @@ import { useGlobal } from '../../contexts/GlobalContext';
 
 // TYPES
 import { IErrorGetWord } from '../../services/types';
-import { Loading } from '../Loading';
 
 export function SectionLeft() {
   const theme = useTheme();
-  const { selectedWord, handleSetSelectedWord } = useGlobal();
+  const { favorites, selectedWord, handleFavorite, handleSetSelectedWord } =
+    useGlobal();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -97,93 +103,107 @@ export function SectionLeft() {
   }
 
   return (
-    <WrapperSectionLeft show={!!selectedWord}>
-      <HeaderSectionLeft>
-        <Button
-          icon={<IoIosClose size={35} />}
-          onlyIcon
-          variant="unstyled"
-          style={{ color: theme.colors.blue[700] }}
-          onClick={() => handleSetSelectedWord('')}
-        />
-      </HeaderSectionLeft>
+    <>
+      <Overlay show={!!selectedWord} />
 
-      {isFetching ? (
-        <Loading />
-      ) : (
-        <ContentSectionLeft>
-          {data ? (
-            <>
-              <Text
-                size="6xl"
-                color="blue.900"
-                style={{ textTransform: 'capitalize' }}
-              >
-                {data?.word}
-              </Text>
+      <WrapperSectionLeft>
+        <HeaderMobileSectionLeft>
+          <Button
+            icon={<IoIosClose size={35} />}
+            onlyIcon
+            variant="unstyled"
+            style={{ color: theme.colors.blue[700] }}
+            onClick={() => handleSetSelectedWord('')}
+          />
+        </HeaderMobileSectionLeft>
 
-              <Group>
-                <Text color="blue.900" size="md">
-                  [ {data?.phonetics?.text?.replaceAll('/', '')} ]
+        {isFetching ? (
+          <Loading />
+        ) : (
+          <ContentSectionLeft>
+            {data ? (
+              <>
+                <Text
+                  size="6xl"
+                  color="blue.900"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {data?.word}
                 </Text>
 
-                <GroupButtons>
-                  {data?.phonetics?.audio && (
-                    <Button
-                      icon={<IoMdVolumeHigh />}
-                      iconSide="top"
-                      onClick={handlePlayPause}
-                    >
-                      <Text>Listen</Text>
-                    </Button>
-                  )}
-
-                  <Button icon={<MdOutlineFavoriteBorder />} iconSide="top">
-                    <Text>Favorite</Text>
-                  </Button>
-
-                  <Button
-                    icon={<MdContentCopy />}
-                    iconSide="top"
-                    onClick={() => handleCopy('hello')}
-                  >
-                    <Text>Copy</Text>
-                  </Button>
-                </GroupButtons>
-
-                <Meanings>
-                  <Text color="blue.900" size="md" weight="bold">
-                    Meanings
+                <Group>
+                  <Text color="blue.900" size="md">
+                    [ {data?.phonetics?.text?.replaceAll('/', '')} ]
                   </Text>
 
-                  {!!data?.meanings?.length &&
-                    data?.meanings.map((mean, index) => (
-                      <Text
-                        key={`${mean?.partOfSpeech}-${index}`}
-                        color="blue.900"
-                        size="xs"
-                        className="means"
+                  <GroupButtons>
+                    {data?.phonetics?.audio && (
+                      <Button
+                        icon={<IoMdVolumeHigh />}
+                        iconSide="top"
+                        onClick={handlePlayPause}
                       >
-                        <b>{mean?.partOfSpeech}</b>: {mean?.definition}
-                      </Text>
-                    ))}
-                </Meanings>
-              </Group>
+                        <Text>Listen</Text>
+                      </Button>
+                    )}
 
-              {data?.phonetics?.audio && (
-                <audio ref={audioRef} src={data?.phonetics?.audio}>
-                  Your browser does not support the
-                  <code>audio</code> element.
-                </audio>
-              )}
-            </>
-          ) : (
-            <span className="error">
-              {errorMessage || 'Please Select a Word'}
-            </span>
-          )}
-        </ContentSectionLeft>
-      )}
-    </WrapperSectionLeft>
+                    <Button
+                      icon={
+                        favorites.includes(data?.word) ? (
+                          <MdOutlineFavorite />
+                        ) : (
+                          <MdOutlineFavoriteBorder />
+                        )
+                      }
+                      iconSide="top"
+                      onClick={() => handleFavorite(data?.word)}
+                    >
+                      <Text>Favorite</Text>
+                    </Button>
+
+                    <Button
+                      icon={<MdContentCopy />}
+                      iconSide="top"
+                      onClick={() => handleCopy('hello')}
+                    >
+                      <Text>Copy</Text>
+                    </Button>
+                  </GroupButtons>
+
+                  <Meanings>
+                    <Text color="blue.900" size="md" weight="bold">
+                      Meanings
+                    </Text>
+
+                    {!!data?.meanings?.length &&
+                      data?.meanings.map((mean, index) => (
+                        <Text
+                          key={`${mean?.partOfSpeech}-${index}`}
+                          color="blue.900"
+                          size="xs"
+                          className="means"
+                        >
+                          <b>{mean?.partOfSpeech}</b>: {mean?.definition}
+                        </Text>
+                      ))}
+                  </Meanings>
+                </Group>
+
+                {data?.phonetics?.audio && (
+                  <audio ref={audioRef} src={data?.phonetics?.audio}>
+                    Your browser does not support the
+                    <code>audio</code> element.
+                  </audio>
+                )}
+              </>
+            ) : (
+              <span className="error">
+                {errorMessage || 'Please Select a Word'}
+              </span>
+            )}
+          </ContentSectionLeft>
+        )}
+      </WrapperSectionLeft>
+    </>
   );
 }

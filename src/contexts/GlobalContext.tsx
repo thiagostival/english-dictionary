@@ -83,7 +83,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 
   const handleGetList = useCallback(async () => {
     try {
-      handleSetWordList([]);
+      handleSetWordList(['hello']);
 
       setLoading(false);
     } catch (error) {

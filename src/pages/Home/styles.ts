@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const WrapperHome = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.space[10]};
 
   position: relative;
 
@@ -12,5 +11,19 @@ export const WrapperHome = styled.div`
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: row;
+    gap: ${({ theme }) => theme.space[20]};
+  }
+`;
+
+export const ContentSectionLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 10%;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    width: 30%;
+    height: 100%;
   }
 `;
