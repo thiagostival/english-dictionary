@@ -24,8 +24,6 @@ export const Overlay = styled.div<IOverlayProps>`
 
   background: rgba(0, 0, 0, 0.15);
 
-  pointer-events: none;
-
   ${(props) =>
     props.show &&
     css`
@@ -53,7 +51,8 @@ export const WrapperSectionLeft = styled.div`
   transform: translate(-50%, -50%);
 
   width: 85%;
-  height: 60%;
+  height: auto;
+  max-height: 60%;
 
   padding: ${({ theme }) => theme.space[7]};
   border-radius: ${({ theme }) => theme.borderRadius.base};
@@ -66,6 +65,7 @@ export const WrapperSectionLeft = styled.div`
 
     width: 100%;
     height: 100%;
+    max-height: 100%;
 
     padding: ${({ theme }) => theme.space[12]};
 
@@ -96,7 +96,7 @@ export const ContentSectionLeft = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  flex: 1;
+  width: 100%;
   gap: ${({ theme }) => theme.space[10]};
 `;
 

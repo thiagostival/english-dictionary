@@ -10,6 +10,7 @@ import { GlobalStyle } from './styles/global';
 import { defaultTheme } from './styles/themes/default';
 
 // CONTEXT
+import { AuthProvider } from './contexts/AuthContext';
 import { GlobalProvider } from './contexts/GlobalContext';
 
 const queryClient = new QueryClient();
@@ -19,9 +20,11 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={defaultTheme}>
         <BrowserRouter>
-          <GlobalProvider>
-            <Router />
-          </GlobalProvider>
+          <AuthProvider>
+            <GlobalProvider>
+              <Router />
+            </GlobalProvider>
+          </AuthProvider>
         </BrowserRouter>
 
         <GlobalStyle />

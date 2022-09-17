@@ -7,18 +7,21 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+
+// SERVICES
+import { db } from '../services/firebase';
+
+// CONTEXT
+import { useAuth } from './AuthContext';
 
 // TYPES
 type GlobalContextData = {
-  loading: boolean;
-  wordList: string[];
   history: string[];
   favorites: string[];
   selectedWord: string;
+  handleHistory: (word: string) => void;
   handleFavorite: (word: string) => void;
-  handleAddHistory: (word: string) => void;
-  handleRemoveHistory: (word: string) => void;
-  handleSetWordList: (words: string[]) => void;
   handleSetSelectedWord: (word: string) => void;
 };
 
@@ -26,92 +29,144 @@ type GlobalProviderProps = {
   children: ReactNode;
 };
 
+interface IData {
+  id: string;
+  words: string[];
+}
+
 export const GlobalContext = createContext({} as GlobalContextData);
 
 export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
 
+  const { user } = useAuth();
+
   const [history, setHistory] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  const [wordList, setWordList] = useState<string[]>([]);
   const [selectedWord, setSelectedWord] = useState<string>(() => {
     const urlWord = URLSearchParams.get('word');
 
     return urlWord || '';
   });
 
-  const [loading, setLoading] = useState(true);
+  function handleSetFavorite(words: string[]) {
+    setFavorites(words);
+  }
 
-  function handleAddHistory(word: string) {
-    setHistory((oldValue) => {
-      if (!oldValue.includes(word) && word) {
-        return [word, ...oldValue];
+  function handleSetHistory(words: string[]) {
+    setHistory(words);
+  }
+
+  const handleSetUrl = useCallback(
+    (param: {}) => {
+      SetURLSearchParams(param ? { ...param } : '');
+    },
+    [SetURLSearchParams]
+  );
+
+  const handleHistory = useCallback(
+    async (word: string) => {
+      try {
+        if (!user?.email || !word) return;
+
+        let newHis = [];
+        if (!history.includes(word)) {
+          newHis = [word, ...history];
+        } else {
+          newHis = history.filter((f) => f !== word);
+        }
+
+        await setDoc(
+          doc(db, user?.email, 'history'),
+          {
+            words: newHis,
+          },
+          { merge: true }
+        );
+
+        handleSetHistory(newHis);
+      } catch (err) {
+        // console.error(err);
       }
-      return oldValue;
-    });
-  }
-  function handleRemoveHistory(word: string) {
-    setHistory((oldValue) => oldValue.filter((item) => item !== word));
-  }
+    },
+    [history, user?.email]
+  );
 
-  function handleFavorite(word: string) {
-    setFavorites((oldValue) => {
-      if (!oldValue.includes(word)) {
-        return [...oldValue, word];
+  const handleFavorite = useCallback(
+    async (word: string) => {
+      try {
+        if (!user?.email) return;
+
+        let newFavs = [];
+        if (!favorites.includes(word)) {
+          newFavs = [word, ...favorites];
+        } else {
+          newFavs = favorites.filter((f) => f !== word);
+        }
+
+        await setDoc(
+          doc(db, user?.email, 'favorites'),
+          {
+            words: newFavs,
+          },
+          { merge: true }
+        );
+
+        handleSetFavorite(newFavs);
+      } catch (err) {
+        // console.error(err);
       }
-
-      return oldValue.filter((item) => item !== word);
-    });
-  }
-
-  const handleSetWordList = useCallback((words: string[]) => {
-    setWordList(words);
-  }, []);
+    },
+    [favorites, user?.email]
+  );
 
   const handleSetSelectedWord = useCallback(
     (word: string) => {
       setSelectedWord(word);
-      handleAddHistory(word);
+      handleHistory(word);
 
       if (word !== URLSearchParams.get('word')) {
-        SetURLSearchParams(word ? { word } : '');
+        handleSetUrl({ word: word.toLowerCase() });
       }
     },
-    [SetURLSearchParams, URLSearchParams]
+    [handleHistory, URLSearchParams, handleSetUrl]
   );
 
-  const handleGetList = useCallback(async () => {
-    try {
-      handleSetWordList(['hello']);
+  const getDataUser = useCallback(async () => {
+    if (!user?.email) return;
 
-      setLoading(false);
-    } catch (error) {
-      // let message = {
-      //   title: 'Failed to get words list',
-      //   description:
-      //     'There was a problem in get words. Please try again later!',
-      // };
-      setLoading(false);
-    }
-  }, [handleSetWordList]);
+    const dataCollectionRef = collection(db, user?.email);
+    const getData = await getDocs(dataCollectionRef);
+
+    const data = getData.docs.map((d) => ({
+      ...d.data(),
+      id: d.id,
+    })) as IData[];
+
+    setFavorites(data.find((d) => d.id === 'favorites')?.words || []);
+    setHistory(data.find((d) => d.id === 'history')?.words || []);
+  }, [user?.email]);
 
   useEffect(() => {
-    handleGetList();
-  }, [handleGetList]);
+    getDataUser();
+  }, [getDataUser]);
+
+  useEffect(() => {
+    if (!user) {
+      setHistory([]);
+      setFavorites([]);
+    }
+  }, [user]);
 
   return (
     <GlobalContext.Provider
       value={{
-        loading,
         history,
-        wordList,
         favorites,
         selectedWord,
+        handleHistory,
         handleFavorite,
-        handleAddHistory,
-        handleRemoveHistory,
-        handleSetWordList,
         handleSetSelectedWord,
       }}
     >
