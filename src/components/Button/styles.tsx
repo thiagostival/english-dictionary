@@ -22,6 +22,16 @@ export const btnVariants = {
       background: ${({ theme }) => theme.colors.blue[100]};
     }
   `,
+  outline: css`
+    border: 1px solid;
+    border-color: ${({ theme }) => theme.colors.blue[500]};
+
+    color: ${({ theme }) => theme.colors.gray[600]};
+
+    &:hover {
+      border-color: ${({ theme }) => theme.colors.blue[700]};
+    }
+  `,
   unstyled: css``,
 };
 

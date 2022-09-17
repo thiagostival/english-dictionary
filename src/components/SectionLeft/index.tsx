@@ -31,6 +31,7 @@ import { isAxiosError } from '../../services/api';
 import { getWord } from '../../services/endpoints';
 
 // CONTEXT
+import { useAuth } from '../../contexts/AuthContext';
 import { useGlobal } from '../../contexts/GlobalContext';
 
 // TYPES
@@ -38,6 +39,8 @@ import { IErrorGetWord } from '../../services/types';
 
 export function SectionLeft() {
   const theme = useTheme();
+
+  const { user } = useAuth();
   const { favorites, selectedWord, handleFavorite, handleSetSelectedWord } =
     useGlobal();
 
@@ -68,7 +71,7 @@ export function SectionLeft() {
     };
   };
 
-  const { data, isFetching } = useQuery(selectedWord, handleGetWord, {
+  const { data, isLoading } = useQuery(selectedWord, handleGetWord, {
     enabled: !!selectedWord,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -104,7 +107,10 @@ export function SectionLeft() {
 
   return (
     <>
-      <Overlay show={!!selectedWord} />
+      <Overlay
+        show={!!selectedWord}
+        onClick={() => handleSetSelectedWord('')}
+      />
 
       <WrapperSectionLeft>
         <HeaderMobileSectionLeft>
@@ -117,7 +123,7 @@ export function SectionLeft() {
           />
         </HeaderMobileSectionLeft>
 
-        {isFetching ? (
+        {isLoading ? (
           <Loading />
         ) : (
           <ContentSectionLeft>
@@ -147,24 +153,26 @@ export function SectionLeft() {
                       </Button>
                     )}
 
-                    <Button
-                      icon={
-                        favorites.includes(data?.word) ? (
-                          <MdOutlineFavorite />
-                        ) : (
-                          <MdOutlineFavoriteBorder />
-                        )
-                      }
-                      iconSide="top"
-                      onClick={() => handleFavorite(data?.word)}
-                    >
-                      <Text>Favorite</Text>
-                    </Button>
+                    {!!user && (
+                      <Button
+                        icon={
+                          favorites.includes(data?.word) ? (
+                            <MdOutlineFavorite />
+                          ) : (
+                            <MdOutlineFavoriteBorder />
+                          )
+                        }
+                        iconSide="top"
+                        onClick={() => handleFavorite(data?.word)}
+                      >
+                        <Text>Favorite</Text>
+                      </Button>
+                    )}
 
                     <Button
                       icon={<MdContentCopy />}
                       iconSide="top"
-                      onClick={() => handleCopy('hello')}
+                      onClick={() => handleCopy(data?.word)}
                     >
                       <Text>Copy</Text>
                     </Button>

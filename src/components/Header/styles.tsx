@@ -15,17 +15,33 @@ export const WrapperHeader = styled.div`
 
   background: ${({ theme }) => theme.colors.white[100]};
 
-  > span {
-    font-size: ${({ theme }) => theme.fontSizes.lg};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
+  > img {
+    max-height: 100%;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    gap: ${({ theme }) => theme.space[2]};
+
+    > span {
+      font-size: ${({ theme }) => theme.fontSizes.lg};
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+    }
+
+    @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     height: 10%;
     padding-bottom: 0;
-  }
-
-  > img {
-    max-height: 100%;
   }
 `;

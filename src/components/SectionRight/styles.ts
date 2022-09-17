@@ -1,33 +1,25 @@
 import styled, { css } from 'styled-components';
 
-import { btnVariants } from '../Button/styles';
-
 interface ICommonProps {
   isActive?: boolean;
 }
-interface IWrapperProps {
-  isDisabled?: boolean;
-}
 
-export const WrapperSectionRight = styled.div<IWrapperProps>`
+export const WrapperSectionRight = styled.div`
   display: flex;
   flex-direction: column;
 
   width: 100%;
   height: 100%;
 
-  pointer-events: ${(props) => (props.isDisabled ? 'none' : 'all')};
-
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    width: 70%;
+    width: ${({ theme }) => `calc(70% - ${theme.space[24]})`};
     margin-top: ${({ theme }) => theme.space[5]};
-
-    pointer-events: all;
   }
 `;
 
 export const TabList = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
 
   padding: ${({ theme }) => theme.space[5]};
@@ -43,6 +35,7 @@ export const Tab = styled.button<ICommonProps>`
   display: flex;
 
   height: 30px;
+  width: 100px;
 
   color: ${({ theme }) => theme.colors.blue[900]};
 
@@ -63,9 +56,14 @@ export const Tab = styled.button<ICommonProps>`
 
 export const TabContent = styled.div`
   display: flex;
+
+  position: relative;
+
   width: 100%;
   height: 100%;
   padding: ${({ theme }) => theme.space[5]};
+
+  overflow: auto;
 
   background: ${({ theme }) => theme.colors.white[100]};
 `;
@@ -81,53 +79,30 @@ export const GridTemplate = styled.div`
   height: fit-content;
 `;
 
-export const WrapperButton = styled.div<ICommonProps>`
+export const ContentMessages = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
+  gap: ${({ theme }) => theme.space[5]};
 
-  height: 80px;
-  width: 110px;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  ${({ theme, isActive }) =>
-    isActive &&
-    css`
-      border: 2px solid ${theme.colors.blue[300]};
-    `}
+  text-align: center;
+  color: ${({ theme }) => theme.colors.green[700]};
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
 
-  > button {
-    ${btnVariants.solid}
-
-    font-size: ${({ theme }) => theme.fontSizes.md};
-
-    border-radius: ${({ theme }) => theme.borderRadius.sm} 0;
+  &.empty {
+    color: ${({ theme }) => theme.colors.gray[500]};
+    font-size: ${({ theme }) => theme.fontSizes['2xl']};
   }
-`;
 
-export const GroupIcons = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: ${({ theme }) => theme.space[3]};
-
-  width: 100%;
-  padding: ${({ theme }) => theme.space[1]};
-
-  border-radius: 0 ${({ theme }) => theme.borderRadius.sm};
-
-  background: ${({ theme }) => theme.colors.blue[100]};
-
-  > svg {
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.blue[700]};
-
-    transition: all 0.2s ease-out;
-
-    &:hover {
-      color: ${({ theme }) => theme.colors.blue[900]};
-    }
+  &.error {
+    color: ${({ theme }) => theme.colors.red[500]};
+    font-size: ${({ theme }) => theme.fontSizes.xl};
   }
 `;
