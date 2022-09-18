@@ -1,41 +1,34 @@
 import { render, screen } from '../../tests/test-utils';
-import * as Auth from '../../contexts/AuthContext';
 
 import userEvent from '@testing-library/user-event';
 
 import { User } from '.';
 
-type IAuthType = ReturnType<typeof Auth['useAuth']>;
+// MOCKs
+import {
+  IAuthType,
+  mockAuthContext,
+  authExample,
+  restoreAllMocks,
+} from '../../tests/mocks';
 
-jest.mock('../../contexts/AuthContext', () => ({
-  useAuth: jest.fn(),
-}));
-
-const mockAuthContext = jest.spyOn(Auth, 'useAuth');
-
-const userExample = {
-  displayName: 'John Doe',
-};
+beforeAll(() => {
+  restoreAllMocks();
+});
 
 describe('User Component', () => {
   it('should render the unauth button', () => {
-    mockAuthContext.mockReturnValue({
-      user: null,
-    } as IAuthType);
-
     render(<User />);
 
     expect(screen.getByText('Login with Google')).toBeInTheDocument();
   });
 
   it('should render the auth button', () => {
-    mockAuthContext.mockReturnValueOnce({
-      user: userExample,
-    } as IAuthType);
+    mockAuthContext.mockReturnValueOnce(authExample as IAuthType);
 
     render(<User />);
 
-    expect(screen.getByText(userExample.displayName)).toBeInTheDocument();
+    expect(screen.getByText(authExample.user.displayName)).toBeInTheDocument();
   });
 
   it('should execute login', async () => {
@@ -52,25 +45,23 @@ describe('User Component', () => {
     await userEvent.click(screen.getByTestId('btn-login'));
     expect(handleSignIn).toHaveBeenCalled();
 
-    mockAuthContext.mockReturnValueOnce({
-      user: userExample,
-    } as IAuthType);
+    mockAuthContext.mockReturnValueOnce(authExample as IAuthType);
 
     rerender(<User />);
 
-    expect(screen.getByText(userExample.displayName)).toBeInTheDocument();
+    expect(screen.getByText(authExample.user.displayName)).toBeInTheDocument();
   });
 
   it('should execute logout', async () => {
     const handleSignOut = jest.fn();
     mockAuthContext.mockReturnValueOnce({
+      ...authExample,
       handleSignOut: handleSignOut as IAuthType['handleSignOut'],
-      user: userExample,
     } as IAuthType);
 
     const { rerender } = render(<User />);
 
-    expect(screen.getByText(userExample.displayName)).toBeInTheDocument();
+    expect(screen.getByText(authExample.user.displayName)).toBeInTheDocument();
 
     await userEvent.click(screen.getByTestId('btn-logout'));
     expect(handleSignOut).toHaveBeenCalled();
@@ -101,4 +92,8 @@ describe('User Component', () => {
       display: 'flex',
     });
   });
+});
+
+afterAll(() => {
+  restoreAllMocks();
 });

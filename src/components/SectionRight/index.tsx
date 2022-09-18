@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { QueryFunctionContext, useInfiniteQuery } from 'react-query';
+import { BroadcastChannel } from 'broadcast-channel';
 
 // STYLES
 import { Tab, TabContent, TabList, WrapperSectionRight } from './styles';

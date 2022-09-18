@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { BroadcastChannel } from 'broadcast-channel';
 
 // CONTEXT
 import { useAuth } from './AuthContext';
