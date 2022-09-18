@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
 import { QueryFunctionContext, useQuery } from 'react-query';
 
@@ -37,12 +37,19 @@ import { useGlobal } from '../../contexts/GlobalContext';
 // TYPES
 import { IErrorGetWord } from '../../services/types';
 
+let refreshChanel = new BroadcastChannel('refresh');
+
 export function SectionLeft() {
   const theme = useTheme();
 
   const { user } = useAuth();
-  const { favorites, selectedWord, handleFavorite, handleSetSelectedWord } =
-    useGlobal();
+  const {
+    updating,
+    selectedWord,
+    handleFavorite,
+    getSpecificWordUser,
+    handleSetSelectedWord,
+  } = useGlobal();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -56,6 +63,8 @@ export function SectionLeft() {
     const { data } = await apiCall(queryKey[0]);
     const find = data.find((r) => !!r.phonetics.length) || data?.[0];
 
+    const wordUser = await getSpecificWordUser(queryKey[0]);
+
     return {
       ...find,
       phonetics:
@@ -68,10 +77,11 @@ export function SectionLeft() {
           definition: m.definitions.find((d) => !!d.definition)?.definition,
         };
       }),
+      isFavorite: wordUser?.isFavorite,
     };
   };
 
-  const { data, isLoading } = useQuery(selectedWord, handleGetWord, {
+  const { data, isLoading, refetch } = useQuery(selectedWord, handleGetWord, {
     enabled: !!selectedWord,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -92,6 +102,14 @@ export function SectionLeft() {
       }
     },
   });
+
+  useEffect(() => {
+    refreshChanel.onmessage = (message) => {
+      if (message.data.includes('updated')) {
+        refetch();
+      }
+    };
+  }, [refetch]);
 
   function handleCopy(word = '') {
     navigator.clipboard.writeText(word);
@@ -147,6 +165,7 @@ export function SectionLeft() {
                       <Button
                         icon={<IoMdVolumeHigh />}
                         iconSide="top"
+                        disabled={updating}
                         onClick={handlePlayPause}
                       >
                         <Text>Listen</Text>
@@ -156,13 +175,14 @@ export function SectionLeft() {
                     {!!user && (
                       <Button
                         icon={
-                          favorites.includes(data?.word) ? (
+                          data.isFavorite ? (
                             <MdOutlineFavorite />
                           ) : (
                             <MdOutlineFavoriteBorder />
                           )
                         }
                         iconSide="top"
+                        disabled={updating}
                         onClick={() => handleFavorite(data?.word)}
                       >
                         <Text>Favorite</Text>
@@ -172,7 +192,7 @@ export function SectionLeft() {
                     <Button
                       icon={<MdContentCopy />}
                       iconSide="top"
-                      onClick={() => handleCopy(data?.word)}
+                      onClick={() => handleCopy(selectedWord)}
                     >
                       <Text>Copy</Text>
                     </Button>

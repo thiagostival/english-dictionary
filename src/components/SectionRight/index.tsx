@@ -1,39 +1,33 @@
-import { useCallback, useState, useMemo } from 'react';
-import { getDocs } from 'firebase/firestore';
-import { useQuery } from 'react-query';
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
+import { QueryFunctionContext, useInfiniteQuery } from 'react-query';
 
 // STYLES
-import {
-  ContentMessages,
-  GridTemplate,
-  Tab,
-  TabContent,
-  TabList,
-  WrapperSectionRight,
-} from './styles';
+import { Tab, TabContent, TabList, WrapperSectionRight } from './styles';
 
 // COMPONENTS
-import WordCard from './WordCard';
 import { User } from '../User';
-import { Loading } from '../Loading';
+import WordCard from './components/WordCard';
+import { GridItems } from './components/GridItems';
 
 // CONTEXT
 import { useAuth } from '../../contexts/AuthContext';
 import { useGlobal } from '../../contexts/GlobalContext';
 
 // SERVICES
-import { AxiosError } from 'axios';
-import { isAxiosError } from '../../services/api';
-import { IErrorGetWord } from '../../services/types';
-import { wordsCollectionRef } from '../../services/firebase';
+import { getWordsList, getWordsUser } from '../../services/endpoints';
+
+// UTILS
+import { useIntersectionObserver } from '../../utils/useIntersectionObserver';
+import { Loading } from '../Loading';
 
 // TYPES
 type ITabs = 'Word List' | 'History' | 'Favorites';
 
+let refreshChanel = new BroadcastChannel('refresh');
+
 export function SectionRight() {
   const {
-    history,
-    favorites,
+    updating,
     selectedWord,
     handleHistory,
     handleFavorite,
@@ -47,53 +41,93 @@ export function SectionRight() {
   const [tabSelected, setTabSelected] = useState<ITabs>(tabs[0]);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const divIntersectionRef = useRef(null);
+  const pageLength = useRef(30);
+
   const handleChangeTab = useCallback((tab: ITabs) => {
     setTabSelected(tab);
   }, []);
 
-  const getWords = async () => {
-    const getWord = await getDocs(wordsCollectionRef);
-    const wordL = getWord.docs.map((d) => Object.values(d.data()));
+  const getWords = async ({
+    queryKey,
+    pageParam = '',
+  }: QueryFunctionContext<ITabs, any>) => {
+    switch (queryKey[0]) {
+      case 'Word List': {
+        const { apiCall } = getWordsList();
+        const getW = await apiCall({
+          pageStart: pageParam,
+          pageLength: pageLength.current,
+        });
 
-    const words = wordL[0] || [];
+        return getW.docs.map((d) => Object.values(d.data())[0]);
+      }
 
-    return words.sort();
+      default: {
+        if (!user?.email) return [];
+
+        const { apiCall } = getWordsUser();
+        const response = await apiCall({ email: user.email });
+        const getData = response.docs.map((d) => d.data());
+
+        let array = [];
+        if (queryKey[0] === 'Favorites') {
+          array = getData.filter((d) => d.isFavorite);
+        } else {
+          array = getData.filter((d) => d.isHistory);
+        }
+
+        return array.map((d) => d.word);
+      }
+    }
   };
 
-  const { data: wordsList, isLoading } = useQuery('words', getWords, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-    onError: (err: AxiosError<IErrorGetWord>) => {
-      let message = {
-        title: 'Failed to get word',
-        description: 'There was a problem in get word. Please try again later!',
-      };
+  const { data, isLoading, hasNextPage, isError, fetchNextPage, refetch } =
+    useInfiniteQuery(tabSelected, getWords, {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: false,
+      staleTime: 1000 * 5, // 5 seconds
+      getPreviousPageParam: () => false,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.length || lastPage.length < pageLength.current) {
+          return undefined;
+        }
 
-      if (isAxiosError(err)) {
-        message = {
-          title: err?.response?.data?.title || message.title,
-          description: err?.response?.data?.message || message.description,
+        return lastPage[lastPage.length - 1];
+      },
+      onError: () => {
+        let message = {
+          title: 'Failed to get word',
+          description:
+            'There was a problem in get words. Please try again later!',
         };
 
         setErrorMessage(message.description);
-      }
-    },
+      },
+    });
+
+  // watcher that identifies if the user has scrolled to the end of the page, if so,
+  // it triggers the next call to api.
+  useIntersectionObserver({
+    target: divIntersectionRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
   });
 
   const dataList = useMemo(() => {
-    switch (tabSelected) {
-      case 'Word List':
-        return wordsList;
-      case 'Favorites':
-        return favorites;
-      case 'History':
-        return history;
+    if (!data) return [];
 
-      default:
-        return [];
-    }
-  }, [wordsList, favorites, history, tabSelected]);
+    return data.pages.reduce((acc, curr) => [...acc, ...curr]);
+  }, [data]);
+
+  useEffect(() => {
+    refreshChanel.onmessage = (message) => {
+      if (message.data.includes('updated')) {
+        refetch();
+      }
+    };
+  }, [refetch]);
 
   return (
     <WrapperSectionRight>
@@ -112,46 +146,34 @@ export function SectionRight() {
       </TabList>
 
       <TabContent>
-        {tabsAuthenticated.includes(tabSelected) && !user ? (
-          <ContentMessages>
-            Log in to save history and favorites
-          </ContentMessages>
-        ) : (
-          <>
-            {isLoading ? (
-              <Loading size={50} />
-            ) : (
-              <GridTemplate>
-                {errorMessage ? (
-                  <ContentMessages className="error">
-                    {errorMessage}
-                  </ContentMessages>
-                ) : (
-                  <>
-                    {!dataList?.length ? (
-                      <ContentMessages className="empty">
-                        <span>No data for now</span>
-                      </ContentMessages>
-                    ) : (
-                      dataList.map((word, idx) => (
-                        <WordCard
-                          word={word}
-                          key={`${word}-${idx}`}
-                          showGroupIcons={!!user}
-                          isSelected={word === selectedWord}
-                          isHistory={tabSelected === 'History'}
-                          isFavorited={favorites.includes(word)}
-                          handleHistory={handleHistory}
-                          handleFavorite={handleFavorite}
-                          handleClick={handleSetSelectedWord}
-                        />
-                      ))
-                    )}
-                  </>
-                )}
-              </GridTemplate>
-            )}
-          </>
+        <GridItems
+          name={tabSelected}
+          isLoading={isLoading}
+          isAuthenticated={!!user}
+          isEmpty={!dataList.length}
+          errorMessage={errorMessage}
+          isNeedAuth={tabsAuthenticated.includes(tabSelected)}
+        >
+          {dataList.map((word, idx) => (
+            <WordCard
+              word={word}
+              key={`${word}-${idx}`}
+              isDisableBtns={updating}
+              showGroupIcons={!!user && tabSelected !== 'Word List'}
+              isSelected={word === selectedWord}
+              isHistory={tabSelected === 'History'}
+              isFavorited={tabSelected === 'Favorites'}
+              handleHistory={handleHistory}
+              handleFavorite={handleFavorite}
+              handleClick={handleSetSelectedWord}
+            />
+          ))}
+        </GridItems>
+
+        {hasNextPage && !isError && (
+          <div ref={divIntersectionRef}>
+            <Loading />
+          </div>
         )}
       </TabContent>
     </WrapperSectionRight>
