@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { scrollBars } from '../../styles/themes/default';
 
 interface ICommonProps {
   isActive?: boolean;
@@ -9,10 +10,12 @@ export const WrapperSectionRight = styled.div`
   flex-direction: column;
 
   width: 100%;
-  height: 100%;
+  height: 90%;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     width: ${({ theme }) => `calc(70% - ${theme.space[24]})`};
+    height: ${({ theme }) => `calc(100% - ${theme.space[5]})`};
+
     margin-top: ${({ theme }) => theme.space[5]};
   }
 `;
@@ -36,7 +39,9 @@ export const Tab = styled.button<ICommonProps>`
 
   height: 30px;
   width: 100px;
+  padding: ${({ theme }) => theme.space[0.5]};
 
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.blue[900]};
 
   transition: all 0.2s ease-in-out;
@@ -52,57 +57,30 @@ export const Tab = styled.button<ICommonProps>`
   &:hover {
     border-bottom: 2px solid ${({ theme }) => theme.colors.blue[700]};
   }
+
+  &:nth-child(2) {
+    width: 70px;
+  }
 `;
 
 export const TabContent = styled.div`
-  display: flex;
-
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: ${({ theme }) => theme.space[2]};
 
   width: 100%;
   height: 100%;
   padding: ${({ theme }) => theme.space[5]};
 
-  overflow: auto;
-
   background: ${({ theme }) => theme.colors.white[100]};
-`;
 
-export const GridTemplate = styled.div`
-  display: grid;
-  justify-content: start;
-
-  gap: ${({ theme }) => theme.space[2]};
-  grid-template-columns: repeat(auto-fit, minmax(100px, auto));
-
-  width: 100%;
-  height: fit-content;
-`;
-
-export const ContentMessages = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: ${({ theme }) => theme.space[5]};
-
-  position: absolute;
-  top: 30px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  text-align: center;
-  color: ${({ theme }) => theme.colors.green[700]};
-  font-size: ${({ theme }) => theme.fontSizes['2xl']};
-  font-weight: ${({ theme }) => theme.fontWeights.medium};
-
-  &.empty {
-    color: ${({ theme }) => theme.colors.gray[500]};
-    font-size: ${({ theme }) => theme.fontSizes['2xl']};
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    height: 100%;
   }
 
-  &.error {
-    color: ${({ theme }) => theme.colors.red[500]};
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-  }
+  overflow: auto;
+  ${scrollBars.medium}
 `;

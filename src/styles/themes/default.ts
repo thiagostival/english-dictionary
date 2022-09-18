@@ -1,3 +1,5 @@
+import { css } from 'styled-components';
+
 export const defaultTheme = {
   colors: {
     blue: {
@@ -119,4 +121,33 @@ export const defaultTheme = {
     80: '20rem',
     96: '24rem',
   },
+};
+
+export const scrollBars = {
+  medium: css`
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-button {
+      width: 0px;
+      height: 0px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #dddddd;
+      border-radius: 50px;
+
+      transition: background 0.2s ease-in-out;
+      &:hover {
+        background: #d1d1d1;
+      }
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50px;
+    }
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  `,
 };

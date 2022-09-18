@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 interface ICommonProps {
   isActive?: boolean;
+  isDisableBtns?: boolean;
 }
 
 export const WrapperWordCard = styled.div<ICommonProps>`
@@ -38,9 +39,15 @@ export const WrapperWordCard = styled.div<ICommonProps>`
     border-radius: ${({ theme }) => theme.borderRadius.sm} 0;
   }
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    width: 120px;
-  }
+  ${(props) =>
+    props.isDisableBtns &&
+    css`
+      cursor: not-allowed;
+
+      > div > svg {
+        pointer-events: none;
+      }
+    `}
 `;
 
 export const GroupIcons = styled.div`
