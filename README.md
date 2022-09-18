@@ -1,4 +1,12 @@
-# Template React App
+# English Dictionary App
+
+<div align="center">
+  <img alt="english-dictionary-print" src="./.img/banner.png" style="height: 400px" />
+</div>
+
+<div align="center">
+  <h2>📖<b>Welcome to your English dictionary</b>📖</h2>
+</div>
 
 <div align="center">
  <a href="#project">👉 Project</a>
@@ -8,15 +16,12 @@
 </div>
 
 <h2 id="project">:muscle: Project</h2>
-This is a very well configured React template.
 
-Where you have the main technologies, like:
+- Application where you can find a wide variety of English words.
 
-- Jest for testing;
-- Husky to validate commits and working together with it we have:
-  - commitlint to follow the conventional commit pattern;
-  - lint-staged to apply eslint settings to the files;
-  - and also configured to run jest and not let the commit be done if it doesn't pass the tests;
+- In the app you have the possibility to view a large list of words and information about each word, such as usage examples and their pronunciation.
+
+- It is also possible to login with google and thus view the history of words seen and also favorite them.
 
 <h2 id="technologies">:rocket: Used Technologies</h2>
 
@@ -26,16 +31,22 @@ This project was developed with the following technologies:
 - [React 18.2](https://reactjs.org/)
 - [TypeScript 4.6.4](https://www.typescriptlang.org/)
 - [Vite](https://vitejs.dev/)
-- [Styled-Components](https://github.com/styled-components/styled-components)
-- [Jest](https://jestjs.io/)
-- [SWC](https://swc.rs/docs/usage/jest)
-- [Testing-Library](https://testing-library.com/docs/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
-- [Husky](https://typicode.github.io/husky/#/)
-- [Lint-Staged](https://github.com/okonet/lint-staged)
-- [commitlint](https://commitlint.js.org/#/)
-- [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Docker](https://docs.docker.com/)
+- Others:
+  - [React Icons](https://react-icons.github.io/react-icons)
+  - [Styled-Components](https://github.com/styled-components/styled-components)
+  - [Axios](https://axios-http.com/docs/intro)
+  - [React Query](https://react-query-v3.tanstack.com/)
+  - [Firebase](https://firebase.google.com/docs?gclid=CjwKCAjwg5uZBhATEiwAhhRLHph3fnjC04qJosdpJO4csja2yAkbQ8Asp433XrJI_Klarx5bLqumrhoCWG8QAvD_BwE&gclsrc=aw.ds)
+  - [Jest](https://jestjs.io/)
+  - [SWC](https://swc.rs/docs/usage/jest)
+  - [Testing-Library](https://testing-library.com/docs/)
+  - [ESLint](https://eslint.org/)
+  - [Prettier](https://prettier.io/)
+  - [Husky](https://typicode.github.io/husky/#/)
+  - [Lint-Staged](https://github.com/okonet/lint-staged)
+  - [commitlint](https://commitlint.js.org/#/)
+  - [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 <h2 id="execution">👨🏻‍💻 Execution</h2>
 
@@ -43,21 +54,26 @@ To run the project:
 
 - Clone the project by running this command in the terminal `git clone <repo_url>`;
 - Open the project folder in the terminal and run:
-  - `yarn` or `npm install` -> To install all dependencies;
-  - `npm prepare` -> To configure the husky;
-  - `yarn dev` or `npm run dev` -> To run the project;
+  - If you have <b>Docker</b>, you can also run the project more easily:
+    - Linux: `docker compose up`
+    - Windows: `docker-compose up`
+    - And open url: `http://localhost:3000`
+  - But you can also run it the traditional way:
+    - `yarn` or `npm install` -> To install all dependencies;
+    - `npm prepare` -> To configure the husky;
+    - `yarn dev` or `npm run dev` -> To run the project;
+    - And open the url is present in terminal;
 - To run the tests just run `yarn test` or `npm run test`.
-- To apply the eslint settings and standardize the code, run: `yarn lint` or `npm run lint`.
-- To test husky and commit lint just make some changes in the code and run:
-  ```
-    git add .
-    git commit -m "fix: message commit"
-  ```
 
 <h2 id="more">🖇 More</h2>
 
 Fork the project and contribute.
 
-Let's keep the repository updated with the latest technologies.
-
 And use and abuse the will!😎😎😎
+
+<h2 id="author">👨🏻‍🎓 Author</h2>
+
+Thiago Stival
+
+[![GitHub](https://img.shields.io/badge/-Github-000?style=flat-square&logo=Github&logoColor=white&link=https://github.com/thiagostival)](https://github.com/thiagostival)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/thiago-stival/)](https://www.linkedin.com/in/thiagostival/)
