@@ -69,33 +69,26 @@ To run the project:
 
 <h2 id="more">🌆 More Images</h2>
 
-<div style="display: flex; gap: 10px; font-weight: bold">
-  <div align="center">
-    <img src="./.img/tab_history.png" alt="tab history">
-    <p align="center">History of visited words</p>
-  </div>
-
-  <div>
-    <img src="./.img/tab_favorites.png" alt="tab favorites">
-    <p align="center">Favorite words list</p>
-  </div>
+<div align="center">
+  <img src="./.img/tab_history.png" alt="tab history">
+  <b><p align="center">History of visited words</p></b>
+</div>
+<div align="center">
+  <img src="./.img/tab_favorites.png" alt="tab favorites">
+  <b><p align="center">Favorite words list</p></b>
 </div>
 
-<div style="display: flex; gap: 10px; font-weight: bold">
-  <div align="center">
-    <img src="./.img/mobile_list.png" alt="words list in mobile">
-    <p align="center">Word list in responsive mode</p>
-  </div>
-
-  <div>
-    <img src="./.img/mobile_word.png" alt="word view in mobile">
-    <p align="center">Viewing a word in responsive mode</p>
-  </div>
-
-  <div>
-    <img src="./.img/mobile_signin.png" alt="history in mobile">
-    <p align="center">Trying to access history tab or favorites when not logged in</p>
-  </div>
+<div align="center">
+  <img src="./.img/mobile_list.png" alt="words list in mobile">
+  <b><p align="center">Word list in responsive mode</p></b>
+</div>
+<div align="center">
+  <img src="./.img/mobile_word.png" alt="word view in mobile">
+  <b><p align="center">Viewing a word in responsive mode</p></b>
+</div>
+<div align="center">
+  <img src="./.img/mobile_signin.png" alt="history in mobile">
+  <b><p align="center">Trying to access history tab or favorites when not logged in</p></b>
 </div>
 
 <h2 id="more">🖇 More</h2>
