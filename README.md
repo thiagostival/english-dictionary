@@ -1,7 +1,7 @@
 # English Dictionary App
 
 <div align="center">
-  <img alt="english-dictionary-print" src="./.img/banner.png" style="height: 400px" />
+  <img alt="english dictionary print" src="./.img/banner.png" style="height: 400px" />
 </div>
 
 <div align="center">
@@ -22,6 +22,8 @@
 - In the app you have the possibility to view a large list of words and information about each word, such as usage examples and their pronunciation.
 
 - It is also possible to login with google and thus view the history of words seen and also favorite them.
+
+- Application developed following the <b>Mobile First</b> model
 
 <h2 id="technologies">:rocket: Used Technologies</h2>
 
@@ -64,6 +66,37 @@ To run the project:
     - `yarn dev` or `npm run dev` -> To run the project;
     - And open the url is present in terminal;
 - To run the tests just run `yarn test` or `npm run test`.
+
+<h2 id="more">🌆 More Images</h2>
+
+<div style="display: flex; gap: 10px; font-weight: bold">
+  <div align="center">
+    <img src="./.img/tab_history.png" alt="tab history">
+    <p align="center">History of visited words</p>
+  </div>
+
+  <div>
+    <img src="./.img/tab_favorites.png" alt="tab favorites">
+    <p align="center">Favorite words list</p>
+  </div>
+</div>
+
+<div style="display: flex; gap: 10px; font-weight: bold">
+  <div align="center">
+    <img src="./.img/mobile_list.png" alt="words list in mobile">
+    <p align="center">Word list in responsive mode</p>
+  </div>
+
+  <div>
+    <img src="./.img/mobile_word.png" alt="word view in mobile">
+    <p align="center">Viewing a word in responsive mode</p>
+  </div>
+
+  <div>
+    <img src="./.img/mobile_signin.png" alt="history in mobile">
+    <p align="center">Trying to access history tab or favorites when not logged in</p>
+  </div>
+</div>
 
 <h2 id="more">🖇 More</h2>
 

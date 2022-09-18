@@ -28,7 +28,7 @@ export function GridItems({
 }: IGridItemsProps) {
   if (isNeedAuth && !isAuthenticated) {
     return (
-      <ContentMessages>to access {name} you must be logged in</ContentMessages>
+      <ContentMessages>To access {name} you must be logged in</ContentMessages>
     );
   }
   if (isLoading) {

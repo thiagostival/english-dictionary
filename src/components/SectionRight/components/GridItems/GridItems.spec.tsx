@@ -27,7 +27,7 @@ describe('Grid Items Component', () => {
 
     expect(screen.queryByText(children)).not.toBeInTheDocument();
     expect(
-      screen.getByText('to access Teste you must be logged in')
+      screen.getByText('To access Teste you must be logged in')
     ).toBeInTheDocument();
 
     rerender(
