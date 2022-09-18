@@ -40,11 +40,13 @@ const WordCard = forwardRef<HTMLDivElement, IWordCardProps>(
     return (
       <WrapperWordCard
         ref={ref}
+        data-testid="word-card"
         isActive={isSelected}
         isDisableBtns={isDisableBtns}
       >
         <Button
           variant="unstyled"
+          data-testid="btn-card"
           disabled={isDisableBtns}
           onClick={() => handleClick(word)}
         >
@@ -52,13 +54,19 @@ const WordCard = forwardRef<HTMLDivElement, IWordCardProps>(
         </Button>
 
         {showGroupIcons && (
-          <GroupIcons>
+          <GroupIcons data-testid="group-icons">
             {isFavorited && (
-              <MdOutlineFavorite onClick={() => handleFavorite(word)} />
+              <MdOutlineFavorite
+                data-testid="btn-favorite"
+                onClick={() => handleFavorite(word)}
+              />
             )}
 
             {isHistory && (
-              <CgTrash onClick={() => handleHistory({ word, isAdd: false })} />
+              <CgTrash
+                data-testid="btn-history"
+                onClick={() => handleHistory({ word, isAdd: false })}
+              />
             )}
           </GroupIcons>
         )}
