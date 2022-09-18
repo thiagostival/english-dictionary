@@ -11,7 +11,7 @@ beforeAll(() => {
   restoreAllMocks();
 });
 
-describe('Word Card Component', () => {
+describe('Grid Items Component', () => {
   it('should render with children', () => {
     render(<GridItems>{children}</GridItems>);
 
