@@ -1,26 +1,39 @@
-name: English Dictionary
+name: CI/CD
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
-  build-test-deploy:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
 
-      - name: Set-up Node
-        uses: actions/setup-node@v1
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.17.0'
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the tests and generate coverage report
+        run: npm test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3.1.0
 
       - name: Build
-        run: |
-          npm install
-          npm run test
-          npm run build
+        run: npm run build
 
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v1
@@ -28,4 +41,4 @@ jobs:
           target_branch: gh-pages
           build_dir: dist
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
