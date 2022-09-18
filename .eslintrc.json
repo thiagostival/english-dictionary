@@ -50,12 +50,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": [
-          "**/*.test.tsx",
-          "**/*.spec.tsx",
-          "**/setupTests.ts",
-          "**/test-utils.tsx"
-        ]
+        "devDependencies": ["**/*.test.tsx", "**/*.spec.tsx", "**/tests/**"]
       }
     ]
   },

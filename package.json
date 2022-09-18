@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "broadcast-channel": "^4.17.0",
     "firebase": "^9.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

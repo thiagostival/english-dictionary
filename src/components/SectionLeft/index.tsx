@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
-import { BroadcastChannel } from 'broadcast-channel';
 import { QueryFunctionContext, useQuery } from 'react-query';
 
 import { IoIosClose, IoMdVolumeHigh } from 'react-icons/io';
