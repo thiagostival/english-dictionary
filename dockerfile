@@ -9,7 +9,7 @@ ADD . .
 
 RUN npm install
 
-# RUN npm test
+RUN npm test
 
 RUN npm run build
 
