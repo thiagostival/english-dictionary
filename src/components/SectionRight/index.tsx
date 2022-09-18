@@ -107,8 +107,10 @@ export function SectionRight() {
       },
     });
 
-  // watcher that identifies if the user has scrolled to the end of the page, if so,
-  // it triggers the next call to api.
+  /**
+   * Watcher that identifies if the user has scrolled to the end of the page,
+   * if so, it triggers the next call to api.
+   */
   useIntersectionObserver({
     target: divIntersectionRef,
     onIntersect: fetchNextPage,
@@ -136,6 +138,7 @@ export function SectionRight() {
           <Tab
             key={`${tab}-${idx}`}
             isActive={tabSelected === tab}
+            data-testid={`tab-${tab}`}
             onClick={() => handleChangeTab(tab)}
           >
             {tab}
@@ -145,7 +148,7 @@ export function SectionRight() {
         <User />
       </TabList>
 
-      <TabContent>
+      <TabContent data-testid="tab-content">
         <GridItems
           name={tabSelected}
           isLoading={isLoading}

@@ -30,9 +30,9 @@ export function User({ modeShow = 'web' }: IUserProps) {
   const { user, handleSignOut, handleSocialSignIn } = useAuth();
 
   return (
-    <WrapperSignIn modeShow={modeShow}>
+    <WrapperSignIn data-testid="wrapper-user" modeShow={modeShow}>
       {!user && (
-        <BtnLogin onClick={handleSocialSignIn}>
+        <BtnLogin data-testid="btn-login" onClick={handleSocialSignIn}>
           <FcGoogle />
           <span>Login with Google</span>
         </BtnLogin>
@@ -42,7 +42,11 @@ export function User({ modeShow = 'web' }: IUserProps) {
         <DataUser>
           <Avatar src={user.photoURL || ''} />
           <span>{user.displayName}</span>
-          <MdLogout size="20" onClick={handleSignOut} />
+          <MdLogout
+            data-testid="btn-logout"
+            size="20"
+            onClick={handleSignOut}
+          />
         </DataUser>
       )}
     </WrapperSignIn>

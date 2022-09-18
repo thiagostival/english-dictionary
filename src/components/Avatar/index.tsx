@@ -52,10 +52,11 @@ export function Avatar({ src }: IAvatarProps) {
         <img
           referrerPolicy="no-referrer"
           src={imgAvatar}
+          data-testid="avatar-img"
           alt="profile-avatar"
         />
       ) : (
-        <FaUserCircle />
+        <FaUserCircle data-testid="avatar-icon" />
       )}
     </WrapperAvatar>
   );

@@ -166,6 +166,7 @@ export function SectionLeft() {
                         icon={<IoMdVolumeHigh />}
                         iconSide="top"
                         disabled={updating}
+                        data-testid="btn-listen"
                         onClick={handlePlayPause}
                       >
                         <Text>Listen</Text>
@@ -181,6 +182,7 @@ export function SectionLeft() {
                             <MdOutlineFavoriteBorder />
                           )
                         }
+                        data-testid="btn-favorite"
                         iconSide="top"
                         disabled={updating}
                         onClick={() => handleFavorite(data?.word)}
@@ -192,6 +194,7 @@ export function SectionLeft() {
                     <Button
                       icon={<MdContentCopy />}
                       iconSide="top"
+                      data-testid="btn-copy"
                       onClick={() => handleCopy(selectedWord)}
                     >
                       <Text>Copy</Text>
@@ -218,7 +221,11 @@ export function SectionLeft() {
                 </Group>
 
                 {data?.phonetics?.audio && (
-                  <audio ref={audioRef} src={data?.phonetics?.audio}>
+                  <audio
+                    ref={audioRef}
+                    src={data?.phonetics?.audio}
+                    data-testid="audio-track"
+                  >
                     Your browser does not support the
                     <code>audio</code> element.
                   </audio>
