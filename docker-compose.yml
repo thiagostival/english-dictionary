@@ -1,0 +1,9 @@
+services:
+  english-dictionary:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
