@@ -1,7 +1,7 @@
 # English Dictionary App
 
 <div align="center">
-  <img alt="english dictionary print" src="./.img/banner.png" style="height: 400px" />
+  <img alt="english dictionary print" src="./.img/banner.png" style="height: 600px" />
 </div>
 
 <div align="center">
