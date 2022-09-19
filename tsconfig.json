@@ -18,5 +18,6 @@
     "types": ["@types/jest"]
   },
   "include": ["src", "src/tests/setup.ts"],
+  "exclude": [".config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
