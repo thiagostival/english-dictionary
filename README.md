@@ -97,10 +97,6 @@ Fork the project and contribute.
 
 And use and abuse the will!😎😎😎
 
-[Presentation Video](https://www.loom.com/share/93430f3776a94edaacf6d1f771a0bd19)
-
-> This is a challenge by Coodesh
-
 <h2 id="author">👨🏻‍🎓 Author</h2>
 
 Thiago Stival
